@@ -20,8 +20,6 @@ public class Profile {
     private Long id;
 
     private String nickname;
-    private String instruction;
-    private String role;
     private String photo;
 
     @OneToOne

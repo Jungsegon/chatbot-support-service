@@ -3,9 +3,11 @@ package com.example.chatservice.member.service;
 
 import com.example.chatservice.member.Authority;
 import com.example.chatservice.member.Member;
+import com.example.chatservice.member.Profile;
 import com.example.chatservice.member.dto.SignRequest;
 import com.example.chatservice.member.dto.SignResponse;
 import com.example.chatservice.member.repository.MemberRepository;
+import com.example.chatservice.member.repository.ProfileRepository;
 import com.example.chatservice.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +23,7 @@ import java.util.Collections;
 public class SignService {
 
     private final MemberRepository memberRepository;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -55,6 +58,15 @@ public class SignService {
             member.setRoles(Collections.singletonList(Authority.builder().name("ROLE_USER").build()));
 
             memberRepository.save(member);
+
+            // 프로필 자동 생성
+            Profile profile = Profile.builder()
+                    .member(member)
+                    .nickname(request.getNickname())
+                    .photo(null) // 기본 프로필 사진 설정 가능
+                    .build();
+            profileRepository.save(profile);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             throw new Exception("잘못된 요청입니다.");

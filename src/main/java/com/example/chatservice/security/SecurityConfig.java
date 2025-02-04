@@ -68,6 +68,14 @@ public class SecurityConfig {
                     .requestMatchers("/register", "/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers(
+                                "/v2/api-docs",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/swagger-ui/**",
+                                "/webjars/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                     .anyRequest().denyAll()
                 )
                 // JWT 인증 필터 적용
@@ -100,21 +108,21 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                /* swagger v2 */
-                "/v2/api-docs",
-                "/swagger-resources",
-                "/swagger-resources/**",
-                "/configuration/ui",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**",
-                /* swagger v3 */
-                "/v3/api-docs/**",
-                "/swagger-ui/**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers(
+//                /* swagger v2 */
+//                "/v2/api-docs",
+//                "/swagger-resources",
+//                "/swagger-resources/**",
+//                "/configuration/ui",
+//                "/configuration/security",
+//                "/swagger-ui.html",
+//                "/webjars/**",
+//                /* swagger v3 */
+//                "/v3/api-docs/**",
+//                "/swagger-ui/**");
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

@@ -24,6 +24,7 @@ public class SignService {
 
     private final MemberRepository memberRepository;
     private final ProfileRepository profileRepository;
+    private final ProfileService profileService;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
@@ -46,6 +47,7 @@ public class SignService {
 
     }
 
+    @Transactional
     public boolean register(SignRequest request) throws Exception {
         try {
             Member member = Member.builder()
@@ -65,11 +67,12 @@ public class SignService {
                     .nickname(request.getNickname())
                     .photo(null) // 기본 프로필 사진 설정 가능
                     .build();
+            profileService.createProfile(member.getAccount(), profile);
             profileRepository.save(profile);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new Exception("잘못된 요청입니다.");
+            e.printStackTrace(); // 예외 원인을 로그로 출력
+            throw e; // 예외 그대로 다시 던짐 (덮어쓰지 않음)
         }
         return true;
     }

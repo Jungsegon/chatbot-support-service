@@ -1,15 +1,13 @@
 package com.example.chatservice.member;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,7 +25,7 @@ public class Profile {
     private Member member;
 
     public Profile(Member member) {
-        this.nickname = member.getNickname();
         this.member = member;
     }
+
 }

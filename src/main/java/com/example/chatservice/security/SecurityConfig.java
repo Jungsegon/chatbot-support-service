@@ -36,9 +36,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .requiresChannel(channel ->
+                /*.requiresChannel(channel ->
                         channel.anyRequest().requiresSecure() // HTTP를 HTTPS로 리디렉션
-                )
+                )*/
+
+
                 // ID, Password 문자열을 Base64로 인코딩하여 전달하는 구조
                 .httpBasic(httpBasic -> httpBasic.disable())
                 // 쿠키 기반이 아닌 JWT 기반이므로 사용하지 않음
@@ -68,6 +70,7 @@ public class SecurityConfig {
                     .requestMatchers("/register", "/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                     .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/profile/**","/chat/**").hasRole("USER")
                         .requestMatchers(
                                 "/v2/api-docs",
                                 "/v3/api-docs/**",

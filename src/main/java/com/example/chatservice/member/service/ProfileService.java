@@ -14,55 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Transactional
 public class ProfileService {
-
-    /*private final ProfileRepository profileRepository;
-    private final MemberRepository memberRepository;
-
-    // 프로필 조회
-    public Profile getProfile(String account) {
-        return profileRepository.findByMemberAccount(account)
-                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다."));
-
-    }
-
-
-    public void createProfile(String account, Profile profile) {
-        // 프로필을 생성할 때 회원과 관련된 정보를 연결합니다.
-        profile.setMember(memberRepository.findByAccount(account)
-                .orElseThrow(() -> new EntityNotFoundException("Member not found")));
-        profileRepository.save(profile);
-    }*/
-
-    // 프로필 생성 (account 사용)
-    /*public Profile createProfile(String account, String nickname, String photo) {
-        Member member = memberRepository.findByAccount(account)
-                .orElseThrow(() -> new RuntimeException("회원 정보를 찾을 수 없습니다."));
-
-        Profile profile = Profile.builder()
-                .member(member)
-                .nickname(nickname)
-                .photo(photo)
-                .build();
-
-        return profileRepository.save(profile);
-    }*/
-
-//    // 프로필 수정 (account 사용)
-//    public Profile updateProfile(String account, String nickname, String photo) {
-//        Profile profile = ProfileRepository.findByAccount(account)
-//                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다."));
-//
-//        profile.updateProfile(nickname, photo);
-//        return profileRepository.save(profile);
-//    }
-
-    /*// 프로필 삭제 (account 사용)
-    public void deleteProfile(String account) {
-        Profile profile = ProfileRepository.findByMember_Account(account)
-                .orElseThrow(() -> new RuntimeException("프로필을 찾을 수 없습니다."));
-        profileRepository.delete(profile);
-    }*/
-
     private final ProfileRepository profileRepository;
     private final MemberRepository memberRepository;
 

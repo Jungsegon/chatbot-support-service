@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @PostMapping("/profile/{memberId}")
+    @PostMapping("/{memberId}")
     public ResponseEntity<Profile> createOrUpdateProfile(@PathVariable String account, @RequestBody ProfileRequest profileRequest) {
         Profile profile = profileService.UpdateProfile(account, profileRequest);
         return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
-    @GetMapping("/profile/{memberId}")
+    @GetMapping("/{memberId}")
     public ResponseEntity<Profile> getProfileByMemberId(@PathVariable Long memberId) {
         Profile profile = profileService.getProfileByMemberId(memberId);
         return new ResponseEntity<>(profile, HttpStatus.OK);

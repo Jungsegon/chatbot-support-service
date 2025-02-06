@@ -2,6 +2,8 @@ package com.example.chatservice;
 
 
 import com.example.chatservice.chat.ChatWebSocketHandler;
+import com.example.chatservice.chat.service.ChatRoomService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
@@ -11,7 +13,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 
 @Configuration
 @EnableWebSocket // 웹 소켓을 사용하도록 정의
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketConfigurer {
+    private final ChatRoomService chatRoomService;
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
@@ -23,6 +27,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Bean
     public WebSocketHandler signalingSocketHandler() { // WebSocketHandler을 웹 소켓 핸들러로 정의
-        return new ChatWebSocketHandler();
+        return new ChatWebSocketHandler(chatRoomService);
     }
 }

@@ -69,8 +69,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/register", "/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/profile/**","/chat/**").hasRole("USER")
+                        .requestMatchers("/user/**","/profile/**").hasRole("USER")
                         .requestMatchers(
                                 "/v2/api-docs",
                                 "/v3/api-docs/**",
@@ -79,6 +78,8 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/chat").permitAll()
                     .anyRequest().denyAll()
                 )
                 // JWT 인증 필터 적용

@@ -79,7 +79,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/ws/**").permitAll()
-                        .requestMatchers("/chat").permitAll()
+                        .requestMatchers("/chat/**").permitAll()
                     .anyRequest().denyAll()
                 )
                 // JWT 인증 필터 적용

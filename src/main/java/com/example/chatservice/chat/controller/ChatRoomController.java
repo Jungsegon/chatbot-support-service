@@ -1,12 +1,15 @@
 package com.example.chatservice.chat.controller;
 
 import com.example.chatservice.SecurityCheckUtil;
-import com.example.chatservice.chat.ChatMessage;
-import com.example.chatservice.chat.ChatRoom;
+import com.example.chatservice.chat.Entity.ChatMessage;
+import com.example.chatservice.chat.Entity.ChatRoom;
+import com.example.chatservice.chat.dto.ChatMessageDTO;
 import com.example.chatservice.chat.dto.ChatRoomDTO;
 import com.example.chatservice.chat.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,26 +20,37 @@ import java.util.List;
 public class ChatRoomController {
     private final ChatRoomService chatRoomService;
 
-    @GetMapping("/test")
-    public ResponseEntity<String> testSecurity() {
-        SecurityCheckUtil.checkAuthentication(); // 🔹 현재 사용자 인증 정보 출력
-        return ResponseEntity.ok("Security 체크 완료");
+
+
+    @PostMapping("/send")
+    public ResponseEntity<String> sendMessage(@RequestBody ChatMessageDTO messageDTO, Authentication authentication) {
+        String userAccount = authentication.getName();
+        ChatRoom chatRoom = chatRoomService.createOrFindRoom(userAccount);
+
+        chatRoomService.saveMessage(chatRoom.getRoomId(), messageDTO.getSender(), messageDTO.getContent());
+
+        return ResponseEntity.ok("Message sent successfully");
     }
 
-    @PostMapping("/room")
-    public ResponseEntity<ChatRoomDTO> createRoom(@RequestBody String name) {
-        ChatRoom chatRoom = chatRoomService.createRoom(name);
-        return ResponseEntity.ok(new ChatRoomDTO(chatRoom.getRoomId(), chatRoom.getName()));
+
+    // ✅ 사용자가 자신의 채팅방 메시지 조회
+    @GetMapping("/messages/{roomId}")
+    public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable String roomId){
+        return ResponseEntity.ok(chatRoomService.getMessages(roomId));
     }
 
+
+    // ✅ 관리자가 모든 채팅 메시지 조회
+    @GetMapping("/messages/all")
+    public ResponseEntity<List<ChatMessage>> getAllMessages() {
+        return ResponseEntity.ok(chatRoomService.getAllMessages());
+    }
+
+    // ✅ 채팅방 조회 (사용자 1명 - 관리자 1명 1:1 채팅)
     @GetMapping("/room/{roomId}")
     public ResponseEntity<ChatRoomDTO> getRoom(@PathVariable String roomId) {
-        ChatRoom chatRoom = chatRoomService.findRoom(roomId);
+        ChatRoom chatRoom = chatRoomService.createOrFindRoom(roomId);
         return ResponseEntity.ok(new ChatRoomDTO(chatRoom.getRoomId(), chatRoom.getName()));
     }
 
-    @GetMapping("/room/{roomid}/messages")
-    public ResponseEntity<List<ChatMessage>> getMessage (@PathVariable String roomId){
-        return ResponseEntity.ok(chatRoomService.getMessage(roomId));
-    }
 }

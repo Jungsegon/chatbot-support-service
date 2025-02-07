@@ -36,4 +36,11 @@ public class SignController {
     public ResponseEntity<SignResponse> getUserForAdmin(@RequestParam String account) throws Exception {
         return new ResponseEntity<>( memberService.getMember(account), HttpStatus.OK);
     }
+
+    // ✅ 관리자 회원가입 API
+    @PostMapping("/register-admin")
+    public ResponseEntity<Boolean> registerAdmin(@RequestBody SignRequest request) {
+        return ResponseEntity.ok(memberService.registerAdmin(request));
+    }
+
 }

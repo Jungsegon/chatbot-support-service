@@ -83,4 +83,19 @@ public class SignService {
         return new SignResponse(member);
     }
 
+    @Transactional
+    public boolean registerAdmin(SignRequest request) {
+        Member admin = Member.builder()
+                .account(request.getAccount())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .nickname(request.getNickname())
+                .name(request.getName())
+                .build();
+
+        admin.setRoles(Collections.singletonList(Authority.builder().name("ROLE_ADMIN").build()));
+
+        memberRepository.save(admin);
+        return true;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.example.chatservice.chat;
+package com.example.chatservice.chat.Entity;
 
 
 import jakarta.persistence.*;
@@ -15,6 +15,9 @@ public class ChatMessage {
     private Long id;
 
     private String sender; // 보낸이
+
+    private String recipient; // 받는 사람
+
     private String content; // 메시지 내용
 
     @ManyToOne // 한채팅방에 메시지가 여러개 있으므로 다대일

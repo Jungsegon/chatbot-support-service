@@ -67,7 +67,20 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 조건별로 요청 허용/제한 설정
                 .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/register", "/login").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/login.html",
+                                "/register.html",
+                                "/styles.css",
+                                "/auth.js",
+                                "/favicon.ico",
+                                "/images/**",
+                                "/js/**",
+                                "/css/**"
+                        ).permitAll()
+
+                        .requestMatchers("/register", "/login").permitAll()
                     .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**","/profile/**").hasRole("USER")
                         .requestMatchers(

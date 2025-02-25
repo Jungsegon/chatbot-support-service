@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채팅</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-header">
+        <h2>실시간 채팅 (관리자와 연결됨)</h2>
+        <button id="logoutBtn">로그아웃</button>
+    </div>
+    <div class="chat-box" id="chat-box"></div>
+    <div class="chat-input">
+        <input type="text" id="message" placeholder="메시지를 입력하세요...">
+        <button id="sendBtn">전송</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        let username = localStorage.getItem("username");
+        if (!username || username === "admin") {
+            alert("로그인이 필요합니다.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        let socket;
+        connectWebSocket();
+        loadMessages();
+
+        function connectWebSocket() {
+            socket = new WebSocket(`ws://localhost:8080/chat?username=${username}`);
+
+            socket.onopen = function () {
+                console.log("✅ WebSocket 연결됨");
+            };
+
+            socket.onclose = function () {
+                console.warn("❌ WebSocket 연결 끊김. 3초 후 재연결 시도...");
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            socket.onmessage = function (event) {
+                let msg = JSON.parse(event.data);
+                appendMessage(msg.sender, msg.content);
+            };
+        }
+
+        function appendMessage(sender, content) {
+            let messageClass = sender === username ? "sent" : "received";
+            $("#chat-box").append(`<div class="message ${messageClass}"><strong>${sender}:</strong> ${content}</div>`);
+            $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+        }
+
+        setInterval(loadMessages, 5000);
+
+        $("#sendBtn").click(function () {
+            let content = $("#message").val();
+            if (content.trim() === "") return;
+            appendMessage(username, content);
+
+            $.ajax({
+                type: "POST",
+                url: "/chat/send",
+                contentType: "application/json",
+                data: JSON.stringify({ sender: username, recipient: "admin", content: content }),
+                headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
+                success: function () { $("#message").val(""); loadMessages(); }
+            });
+        });
+
+        $("#logoutBtn").click(function () {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            window.location.href = "login.html";
+        });
+    });
+</script>
+</body>
+</html>

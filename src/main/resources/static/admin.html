@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>관리자 채팅</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="admin-container">
+    <h2>관리자 - 채팅방 목록</h2>
+    <button id="logoutBtn">로그아웃</button>
+
+    <div id="chatroom-list">
+        <h3>채팅방 목록</h3>
+        <ul id="rooms"></ul>
+    </div>
+
+    <div id="chat-container" style="display: none;">
+        <h3>채팅</h3>
+        <div id="chat-box"></div>
+        <input type="text" id="message" placeholder="메시지를 입력하세요...">
+        <button id="sendBtn">전송</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        let admin = localStorage.getItem("username");
+        if (admin !== "admin") {
+            alert("관리자만 접근할 수 있습니다.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        let socket;
+        let currentRoomId = null;
+        connectWebSocket();
+        loadChatRooms(); // ✅ 로그인 후 즉시 채팅방 목록 불러오기
+
+        function connectWebSocket() {
+            socket = new WebSocket(`ws://localhost:8080/chat?username=admin`);
+
+            socket.onopen = function () {
+                console.log("✅ 관리자 WebSocket 연결됨");
+            };
+
+            socket.onclose = function () {
+                console.warn("❌ 관리자 WebSocket 연결 종료됨. 3초 후 재연결 시도...");
+                setTimeout(connectWebSocket, 3000);
+            };
+
+            socket.onmessage = function (event) {
+                let msg = JSON.parse(event.data);
+                if (msg.roomId === currentRoomId) {
+                    appendMessage(msg.sender, msg.content);
+                }
+            };
+        }
+
+        function appendMessage(sender, content) {
+            let messageClass = sender === "admin" ? "sent" : "received";
+            $("#chat-box").append(`<div class="message ${messageClass}"><strong>${sender}:</strong> ${content}</div>`);
+            $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+        }
+
+        function loadMessages() {
+            if (!currentRoomId) return;
+
+            $.ajax({
+                type: "GET",
+                url: `/chat/messages/${currentRoomId}`,
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                success: function (messages) {
+                    $("#chat-box").empty();
+                    messages.forEach(msg => appendMessage(msg.sender, msg.content));
+                },
+                error: function () {
+                    console.warn("❌ 채팅 메시지를 불러오지 못했습니다.");
+                }
+            });
+        }
+
+        function loadChatRooms() {
+            $.ajax({
+                type: "GET",
+                url: "/chat/rooms",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                success: function (rooms) {
+                    updateChatRoomList(rooms);
+                },
+                error: function (xhr) {
+                    console.warn("❌ 채팅방 목록 불러오기 실패:", xhr.responseText);
+                }
+            });
+        }
+
+        function updateChatRoomList(rooms) {
+            $("#rooms").empty();
+            rooms.forEach(room => {
+                $("#rooms").append(`<li><button class="room-btn" data-room="${room.roomId}">${room.name}</button></li>`);
+            });
+
+            $(".room-btn").click(function () {
+                currentRoomId = $(this).data("room");
+                $("#chat-container").show();
+                $("#chat-box").empty();
+                loadMessages();
+            });
+        }
+
+        setInterval(loadChatRooms, 5000); // ✅ 5초마다 채팅방 목록 새로고침
+        setInterval(loadMessages, 5000); // ✅ 5초마다 메시지 새로고침
+
+        $("#sendBtn").click(function () {
+            let content = $("#message").val();
+            if (content.trim() === "" || !currentRoomId) return;
+
+            let messageData = {
+                sender: "admin",
+                roomId: currentRoomId,
+                content: content
+            };
+
+            appendMessage("admin", content);
+
+            $.ajax({
+                type: "POST",
+                url: "/chat/send",
+                contentType: "application/json",
+                data: JSON.stringify(messageData),
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                success: function () {
+                    $("#message").val("");
+                    loadMessages();
+                },
+                error: function () {
+                    console.warn("❌ 메시지 전송 실패");
+                }
+            });
+        });
+
+        $("#logoutBtn").click(function () {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            window.location.href = "login.html";
+        });
+    });
+</script>
+
+</body>
+</html>

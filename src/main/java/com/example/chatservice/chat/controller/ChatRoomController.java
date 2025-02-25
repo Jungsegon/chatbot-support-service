@@ -53,4 +53,11 @@ public class ChatRoomController {
         return ResponseEntity.ok(new ChatRoomDTO(chatRoom.getRoomId(), chatRoom.getName()));
     }
 
+    // ✅ 관리자가 모든 채팅방 조회
+    @GetMapping("/rooms")
+    public ResponseEntity<List<ChatRoomDTO>> getAllChatRooms(){
+        List<ChatRoomDTO> chatRooms = chatRoomService.getAllChatRooms();
+        return ResponseEntity.ok(chatRooms);
+    }
+
 }

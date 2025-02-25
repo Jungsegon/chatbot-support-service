@@ -2,6 +2,7 @@ package com.example.chatservice.chat.service;
 
 import com.example.chatservice.chat.Entity.ChatMessage;
 import com.example.chatservice.chat.Entity.ChatRoom;
+import com.example.chatservice.chat.dto.ChatRoomDTO;
 import com.example.chatservice.chat.repository.ChatMessageRepository;
 import com.example.chatservice.chat.repository.ChatRoomRepository;
 import com.example.chatservice.member.Member;
@@ -100,5 +101,13 @@ public class ChatRoomService {
     // ✅ 관리자는 모든 사용자의 메시지를 조회 가능
     public List<ChatMessage> getAllMessages() {
         return chatMessageRepository.findAll();
+    }
+
+    // ✅ 전체 채팅방 목록 조회
+    public List<ChatRoomDTO> getAllChatRooms() {
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+        return chatRooms.stream()
+                .map(room -> new ChatRoomDTO(room.getRoomId(), room.getName()))
+                .toList();
     }
 }

@@ -71,6 +71,8 @@ public class SecurityConfig {
                                 "/",
                                 "/index.html",
                                 "/login.html",
+                                "/chat.html",
+                                "/admin.html",
                                 "/register.html",
                                 "/styles.css",
                                 "/auth.js",

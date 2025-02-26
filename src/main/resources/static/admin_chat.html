@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사용자 채팅</title>
+    <title>관리자 채팅</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<div class="chat-container">
-    <div class="chat-header">
-        <h2>관리자와 1:1 채팅</h2>
-        <button id="logoutBtn">로그아웃</button>
-    </div>
-    <div class="chat-box" id="chat-box"></div>
+<div class="admin-container">
+    <h2 id="chat-title">채팅방</h2>
+    <button id="backBtn">뒤로가기</button>
+    <button id="logoutBtn">로그아웃</button>
+
+    <div id="chat-box"></div>
+
     <div class="chat-input">
         <input type="text" id="message" placeholder="메시지를 입력하세요...">
         <button id="sendBtn">전송</button>
@@ -22,22 +23,33 @@
 
 <script>
     $(document).ready(function () {
-        let username = localStorage.getItem("username");
-        if (!username || username === "admin") {
-            alert("로그인이 필요합니다.");
+        let admin = localStorage.getItem("username");
+        if (admin !== "admin") {
+            alert("관리자만 접근할 수 있습니다.");
             window.location.href = "login.html";
             return;
         }
+
+        let urlParams = new URLSearchParams(window.location.search);
+        let roomId = urlParams.get("roomId");
+
+        if (!roomId) {
+            alert("잘못된 접근입니다.");
+            window.location.href = "admin.html";
+            return;
+        }
+
+        $("#chat-title").text(`채팅방: ${roomId}`);
 
         let socket;
         connectWebSocket();
         loadMessages(); // ✅ 기존 메시지 불러오기
 
         function connectWebSocket() {
-            socket = new WebSocket(`ws://localhost:8080/chat?username=${username}`);
+            socket = new WebSocket(`ws://localhost:8080/chat?username=admin`);
 
             socket.onopen = function () {
-                console.log("✅ WebSocket 연결됨");
+                console.log("✅ 관리자 WebSocket 연결됨");
             };
 
             socket.onclose = function () {
@@ -47,7 +59,7 @@
 
             socket.onmessage = function (event) {
                 let msg = JSON.parse(event.data);
-                appendMessage(msg.sender, msg.content);
+                if (msg.roomId === roomId) appendMessage(msg.sender, msg.content);
             };
         }
 
@@ -55,7 +67,7 @@
         function loadMessages() {
             $.ajax({
                 type: "GET",
-                url: `/chat/messages/${username}`, // ✅ 사용자 계정 기반으로 메시지 조회
+                url: `/chat/messages/${roomId}`,
                 headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
                 success: function (messages) {
                     $("#chat-box").empty();
@@ -65,7 +77,7 @@
         }
 
         function appendMessage(sender, content) {
-            let messageClass = sender === username ? "sent" : "received";
+            let messageClass = sender === "admin" ? "sent" : "received";
             $("#chat-box").append(`<div class="message ${messageClass}"><strong>${sender}:</strong> ${content}</div>`);
             $("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
         }
@@ -77,11 +89,15 @@
             let content = $("#message").val();
             if (content.trim() === "") return;
 
-            let messageData = { sender: username, recipient: "admin", content: content };
+            let messageData = { sender: "admin", roomId: roomId, content: content };
 
-            socket.send(JSON.stringify(messageData)); // ✅ WebSocket을 통해 메시지 전송
-            appendMessage(username, content); // ✅ 전송 즉시 화면에 추가
+            socket.send(JSON.stringify(messageData));
+            appendMessage("admin", content);
             $("#message").val("");
+        });
+
+        $("#backBtn").click(function () {
+            window.location.href = "admin.html";
         });
 
         $("#logoutBtn").click(function () {

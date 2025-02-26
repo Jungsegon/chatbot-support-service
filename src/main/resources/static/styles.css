@@ -1,3 +1,4 @@
+/* 기본 스타일 */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -8,6 +9,7 @@ body {
     margin: 0;
 }
 
+/* 로그인 & 회원가입 컨테이너 */
 .auth-container {
     width: 300px;
     background: white;
@@ -47,17 +49,8 @@ body {
     margin-top: 15px;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-}
-
-.chat-container {
+/* 채팅 컨테이너 */
+.chat-container, .admin-container {
     width: 350px;
     background: white;
     border-radius: 10px;
@@ -103,6 +96,7 @@ body {
     align-self: flex-start;
 }
 
+/* 입력창 스타일 */
 .chat-input {
     display: flex;
     border-top: 1px solid #ddd;
@@ -129,4 +123,42 @@ body {
 
 .chat-input button:hover {
     background: #0056b3;
+}
+
+/* 관리자 채팅방 목록 */
+#chatroom-list {
+    padding: 15px;
+}
+
+#rooms {
+    list-style: none;
+    padding: 0;
+}
+
+#rooms li {
+    padding: 10px;
+    background: #eee;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#rooms li:hover {
+    background: #ccc;
+}
+
+#chat-container {
+    display: none;
+    padding: 15px;
+}
+
+/* 로그아웃 버튼 */
+button#logoutBtn {
+    background-color: red;
+    color: white;
+}
+
+button#logoutBtn:hover {
+    background-color: darkred;
 }

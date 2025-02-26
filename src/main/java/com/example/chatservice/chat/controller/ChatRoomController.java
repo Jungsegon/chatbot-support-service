@@ -22,15 +22,15 @@ public class ChatRoomController {
 
 
 
-    @PostMapping("/send")
-    public ResponseEntity<String> sendMessage(@RequestBody ChatMessageDTO messageDTO, Authentication authentication) {
-        String userAccount = authentication.getName();
-        ChatRoom chatRoom = chatRoomService.createOrFindRoom(userAccount);
-
-        chatRoomService.saveMessage(chatRoom.getRoomId(), messageDTO.getSender(), messageDTO.getContent());
-
-        return ResponseEntity.ok("Message sent successfully");
-    }
+//    @PostMapping("/send")
+//    public ResponseEntity<String> sendMessage(@RequestBody ChatMessageDTO messageDTO, Authentication authentication) {
+//        String userAccount = authentication.getName();
+//        ChatRoom chatRoom = chatRoomService.createOrFindRoom(userAccount);
+//
+//        chatRoomService.saveMessage(chatRoom.getRoomId(), messageDTO.getSender(), messageDTO.getContent());
+//
+//        return ResponseEntity.ok("Message sent successfully");
+//    }
 
 
     // ✅ 사용자가 자신의 채팅방 메시지 조회

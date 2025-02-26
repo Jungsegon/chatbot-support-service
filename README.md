@@ -81,7 +81,8 @@ https://www.notion.so/191fce9e338580c3b0cfc058e7b6e73e
 5. **CI/CD**
     - 지속적으로 통합/배포 구현
 
-
+## ERD 다이어그램
+![img.png](img.png)
 
 ## API 명세
 

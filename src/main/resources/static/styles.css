@@ -1,7 +1,18 @@
-/* 기본 스타일 */
+/* ✅ 공통 스타일 (모던 다크 & 블루 테마) */
+:root {
+    --primary-color: #007bff;
+    --primary-dark: #0056b3;
+    --bg-color: #1a1a2e;
+    --container-bg: #16213e;
+    --text-color: #e0e0e0;
+    --border-color: #0f3460;
+    --button-hover: #00a6ff;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,125 +20,159 @@ body {
     margin: 0;
 }
 
-/* 로그인 & 회원가입 컨테이너 */
+/* ✅ 로그인 & 회원가입 컨테이너 */
 .auth-container {
-    width: 300px;
-    background: white;
-    padding: 20px;
+    width: 350px;
+    background: var(--container-bg);
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
     text-align: center;
 }
 
 .auth-container h2 {
     margin-bottom: 20px;
+    font-size: 24px;
 }
 
 .auth-container input {
     width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ddd;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
+    background: #0f3460;
+    color: white;
+    font-size: 16px;
+    outline: none;
 }
 
 .auth-container button {
     width: 100%;
-    padding: 10px;
-    background: #007bff;
+    padding: 12px;
+    background: var(--primary-color);
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
 }
 
 .auth-container button:hover {
-    background: #0056b3;
+    background: var(--button-hover);
 }
 
 .auth-container p {
     margin-top: 15px;
+    font-size: 14px;
 }
 
-/* 채팅 컨테이너 */
+.auth-container a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}
+
+/* ✅ 채팅 컨테이너 */
 .chat-container, .admin-container {
-    width: 350px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    background: var(--container-bg);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
     overflow: hidden;
+    text-align: center;
 }
 
 .chat-header {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
-    padding: 15px;
-    text-align: center;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: bold;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .chat-box {
-    height: 400px;
+    height: 450px;
     overflow-y: auto;
-    padding: 10px;
-    background: #f9f9f9;
+    padding: 15px;
+    background: #0f3460;
+    border-radius: 0 0 12px 12px;
+    color: white;
 }
 
+/* ✅ 메시지 스타일 */
 .message {
-    padding: 8px 12px;
+    padding: 10px 15px;
     margin: 8px 0;
-    border-radius: 5px;
-    max-width: 80%;
+    border-radius: 8px;
+    max-width: 75%;
     word-wrap: break-word;
+    font-size: 14px;
 }
 
 .sent {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
     align-self: flex-end;
     text-align: right;
+    float: right;
+    clear: both;
 }
 
 .received {
-    background: #e4e6eb;
-    color: black;
+    background: var(--border-color);
+    color: white;
     align-self: flex-start;
+    text-align: left;
+    float: left;
+    clear: both;
 }
 
-/* 입력창 스타일 */
+/* ✅ 입력창 스타일 */
 .chat-input {
     display: flex;
-    border-top: 1px solid #ddd;
-    padding: 10px;
+    border-top: 1px solid var(--border-color);
+    padding: 15px;
 }
 
 .chat-input input {
     flex: 1;
-    padding: 8px;
-    border: 1px solid #ddd;
+    padding: 12px;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
+    background: #0f3460;
+    color: white;
+    font-size: 16px;
     outline: none;
 }
 
 .chat-input button {
-    padding: 8px 15px;
+    padding: 12px 20px;
     margin-left: 10px;
     border: none;
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease-in-out;
 }
 
 .chat-input button:hover {
-    background: #0056b3;
+    background: var(--button-hover);
 }
 
-/* 관리자 채팅방 목록 */
+/* ✅ 관리자 채팅방 목록 */
 #chatroom-list {
-    padding: 15px;
+    padding: 20px;
 }
 
 #rooms {
@@ -136,29 +181,47 @@ body {
 }
 
 #rooms li {
-    padding: 10px;
-    background: #eee;
-    margin-bottom: 5px;
-    border-radius: 5px;
+    padding: 12px;
+    background: var(--border-color);
+    margin-bottom: 8px;
+    border-radius: 6px;
     cursor: pointer;
     text-align: center;
+    transition: background 0.3s;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
 }
 
 #rooms li:hover {
-    background: #ccc;
+    background: var(--primary-dark);
 }
 
-#chat-container {
-    display: none;
-    padding: 15px;
-}
-
-/* 로그아웃 버튼 */
+/* ✅ 로그아웃 버튼 */
 button#logoutBtn {
     background-color: red;
     color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
 }
 
 button#logoutBtn:hover {
     background-color: darkred;
+}
+
+/* ✅ 스크롤바 스타일 */
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #0f3460;
 }

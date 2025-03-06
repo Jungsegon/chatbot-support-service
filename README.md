@@ -7,7 +7,8 @@ FAQ 답변, 사용자 요청 처리, 간단한 대화 로그 저장 기능을 �
 
 ---
 ## 개발일지
-https://www.notion.so/191fce9e338580c3b0cfc058e7b6e73e
+https://summer-hall-34b.notion.site/177fce9e338580f1a30aedb7df1d1a1d
+
 ## 프로젝트 진행 사항
 ### 2025-01-23
 - **프로젝트 초기 설정 완료**

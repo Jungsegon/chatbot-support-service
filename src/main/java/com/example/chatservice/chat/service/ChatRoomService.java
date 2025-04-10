@@ -27,7 +27,7 @@ public class ChatRoomService {
     private final ChatMessageRepository chatMessageRepository;
     private final MemberRepository memberRepository;
 
-    // ✅ 사용자와 관리자 간 1:1 채팅방을 생성하거나 기존 채팅방을 반환
+    // 사용자와 관리자 간 1:1 채팅방을 생성하거나 기존 채팅방을 반환
     public ChatRoom createOrFindRoom(String userAccount) {
         Member user = memberRepository.findByAccount(userAccount)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다."));
@@ -53,12 +53,12 @@ public class ChatRoomService {
         ));
     }
 
-    // ✅ 채팅 메시지를 저장
+    // 채팅 메시지를 저장
     public ChatMessage saveMessage(String roomId, String sender, String content) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseGet(() -> createChatRoom(roomId)); // ✅ 채팅방이 없으면 자동 생성
 
-        // ✅ recipient 설정: sender가 admin이면 roomId(사용자 account), sender가 사용자면 recipient=admin
+        // recipient 설정: sender가 admin이면 roomId(사용자 account), sender가 사용자면 recipient=admin
         String recipient = "admin".equals(sender) ? roomId : "admin";
 
         ChatMessage message = ChatMessage.builder()
@@ -71,7 +71,7 @@ public class ChatRoomService {
         return chatMessageRepository.save(message);
     }
 
-    // ✅ roomId=userAccount인 새로운 채팅방 생성
+    // roomId=userAccount인 새로운 채팅방 생성
     private ChatRoom createChatRoom(String userAccount) {
         Member user = memberRepository.findByAccount(userAccount)
                 .orElseThrow(() -> new EntityNotFoundException("❌ 유저를 찾을 수 없습니다: " + userAccount));
@@ -90,7 +90,7 @@ public class ChatRoomService {
     }
 
 
-    // ✅ 특정 채팅방의 메시지 조회 (사용자는 자신의 채팅방 메시지만 볼 수 있음)
+    // 특정 채팅방의 메시지 조회 (사용자는 자신의 채팅방 메시지만 볼 수 있음)
     public List<ChatMessage> getMessages(String roomId) {
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new EntityNotFoundException("채팅방을 찾을 수 없습니다."));
@@ -98,12 +98,12 @@ public class ChatRoomService {
         return chatMessageRepository.findByChatRoom(chatRoom);
     }
 
-    // ✅ 관리자는 모든 사용자의 메시지를 조회 가능
+    // 관리자는 모든 사용자의 메시지를 조회 가능
     public List<ChatMessage> getAllMessages() {
         return chatMessageRepository.findAll();
     }
 
-    // ✅ 전체 채팅방 목록 조회
+    // 전체 채팅방 목록 조회
     public List<ChatRoomDTO> getAllChatRooms() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         return chatRooms.stream()

@@ -22,12 +22,12 @@ public class ChatRoom {
     @Column(nullable = false)
     private String name; // 채팅방 이름
 
-    // ✅ 사용자 1명 (User) in 채팅방
+    // 사용자 1명 (User) in 채팅방
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "account", nullable = false)
     private Member user;
 
-    // ✅ 관리자 1명 (Admin) in 채팅방
+    // 관리자 1명 (Admin) in 채팅방
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", referencedColumnName = "account", nullable = false)
     private Member admin;

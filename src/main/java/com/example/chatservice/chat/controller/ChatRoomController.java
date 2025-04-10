@@ -33,27 +33,27 @@ public class ChatRoomController {
 //    }
 
 
-    // ✅ 사용자가 자신의 채팅방 메시지 조회
+    // 사용자가 자신의 채팅방 메시지 조회
     @GetMapping("/messages/{roomId}")
     public ResponseEntity<List<ChatMessage>> getMessages(@PathVariable String roomId){
         return ResponseEntity.ok(chatRoomService.getMessages(roomId));
     }
 
 
-    // ✅ 관리자가 모든 채팅 메시지 조회
+    // 관리자가 모든 채팅 메시지 조회
     @GetMapping("/messages/all")
     public ResponseEntity<List<ChatMessage>> getAllMessages() {
         return ResponseEntity.ok(chatRoomService.getAllMessages());
     }
 
-    // ✅ 채팅방 조회 (사용자 1명 - 관리자 1명 1:1 채팅)
+    // 채팅방 조회 (사용자 1명 - 관리자 1명 1:1 채팅)
     @GetMapping("/room/{roomId}")
     public ResponseEntity<ChatRoomDTO> getRoom(@PathVariable String roomId) {
         ChatRoom chatRoom = chatRoomService.createOrFindRoom(roomId);
         return ResponseEntity.ok(new ChatRoomDTO(chatRoom.getRoomId(), chatRoom.getName()));
     }
 
-    // ✅ 관리자가 모든 채팅방 조회
+    // 관리자가 모든 채팅방 조회
     @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoomDTO>> getAllChatRooms(){
         List<ChatRoomDTO> chatRooms = chatRoomService.getAllChatRooms();

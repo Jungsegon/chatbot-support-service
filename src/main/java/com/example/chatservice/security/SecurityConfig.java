@@ -68,6 +68,7 @@ public class SecurityConfig {
                 // 조건별로 요청 허용/제한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/chatservice/**",
                                 "/",
                                 "/index.html",
                                 "/login.html",
